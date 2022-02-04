@@ -1,0 +1,12 @@
+<resources>
+    <string name="app_name">GitHubRepo_TestTask</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="message">Message: </string>
+    <string name="commit_s_owner">Commit\'s owner: </string>
+    <string name="publish_date">Date</string>
+    <string name="list_sha">List of sha:</string>
+    <string name="first_line_message_error">Возникли проблемы с загрузкой данных</string>
+    <string name="second_line_message_error">перезагрузите интернет соединения</string>
+    <string name="try_again">Попробовать снова</string>
+</resources>
