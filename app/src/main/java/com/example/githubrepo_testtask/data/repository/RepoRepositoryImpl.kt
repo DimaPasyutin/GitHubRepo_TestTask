@@ -1,6 +1,5 @@
 package com.example.githubrepo_testtask.data.repository
 
-import android.util.Log
 import com.example.githubrepo_testtask.data.network.models.CommitGeneralInfoResponse
 import com.example.githubrepo_testtask.data.network.models.RepositoryResponse
 import com.example.githubrepo_testtask.data.network.retrofit.RepoApi
@@ -57,8 +56,7 @@ class RepoRepositoryImpl(private val repoApi: RepoApi): RepoRepository {
                 ))
             }
         }
-        val repo = repoInMemoryCache + listRepositories
-        Log.i("!!!", repo[0].toString() + repo[repo.size-1].toString())
+        if (repoInMemoryCache == listRepositories) return repoInMemoryCache
         return repoInMemoryCache + listRepositories
     }
 

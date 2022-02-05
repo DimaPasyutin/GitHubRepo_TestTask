@@ -1,6 +1,7 @@
 package com.example.githubrepo_testtask.presentation.screens.main_page
 
 import android.os.Bundle
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -80,7 +81,7 @@ class RepositoriesPageFragment : Fragment() {
         when {
 
             repositoriesUiState.isFirstLoading -> {
-                requireBinding.firstLoadProgressBar.visibility = VISIBLE
+                requireBinding.shimmer.startShimmer()
             }
 
             repositoriesUiState.isUploading != null && repositoriesUiState.isUploading -> {
@@ -91,7 +92,7 @@ class RepositoriesPageFragment : Fragment() {
                 isLoadSuccess(repositoriesUiState)
             }
 
-            repositoriesUiState.error != null && !repositoriesUiState.isUploadError-> {
+            repositoriesUiState.error != null && !repositoriesUiState.isUploadError && !repositoriesUiState.isRefreshed -> {
                 isErrorLoading()
             }
 
@@ -99,28 +100,37 @@ class RepositoriesPageFragment : Fragment() {
                 Toast.makeText(requireContext(), "Ошибка при загрузке", Toast.LENGTH_SHORT).show()
                 adapter!!.repositories = repositoriesUiState.repositories
                 requireBinding.uploadProgressBar.visibility = GONE
-                requireBinding.firstLoadProgressBar.visibility = GONE
+                requireBinding.shimmer.visibility = GONE
+            }
+
+            repositoriesUiState.isRefreshed -> {
+                requireBinding.swipeContainer.isRefreshing = true
             }
         }
     }
 
     private fun isLoadSuccess(repositoriesUiState: RepositoriesUiState) {
+        Log.i("!!!", repositoriesUiState.repositories[0].id.toString() + repositoriesUiState.repositories[repositoriesUiState.repositories.size - 1].id.toString())
         with(requireBinding) {
-            requireBinding.firstLoadProgressBar.visibility = GONE
-            requireBinding.uploadProgressBar.visibility = GONE
-            requireBinding.repositoriesRecyclerView.visibility = VISIBLE
+            uploadProgressBar.visibility = GONE
+            repositoriesRecyclerView.visibility = VISIBLE
             adapter!!.repositories = repositoriesUiState.repositories
             spaceViewProblem.visibility = GONE
             firstLineTextProblem.visibility = GONE
             secondLineTextProblem.visibility = GONE
             textViewTryAgain.visibility = GONE
+            shimmer.visibility = GONE
+            shimmer.stopShimmer()
+            swipeContainer.setOnRefreshListener {
+                repositoriesPageViewModel.fetchRefreshingRepositories(FIRST_REQUEST)
+            }
+            swipeContainer.isRefreshing = false
         }
     }
 
     private fun isErrorLoading() {
         with(requireBinding) {
             uploadProgressBar.visibility = GONE
-            firstLoadProgressBar.visibility = GONE
             repositoriesRecyclerView.visibility = GONE
             spaceViewProblem.visibility = VISIBLE
             firstLineTextProblem.visibility = VISIBLE
@@ -129,6 +139,8 @@ class RepositoriesPageFragment : Fragment() {
             textViewTryAgain.setOnClickListener {
                 repositoriesPageViewModel.loadRepositories(lastIdRepo)
             }
+            shimmer.visibility = GONE
+            swipeContainer.isRefreshing = false
         }
     }
 

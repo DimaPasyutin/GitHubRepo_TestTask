@@ -11,7 +11,7 @@ import io.reactivex.disposables.Disposable
 
 class RepositoriesPageViewModel(app: App): ViewModel() {
 
-    private val uiState = MutableLiveData(RepositoriesUiState(emptyList(), null, false, false, false))
+    private val uiState = MutableLiveData(RepositoriesUiState(emptyList(), null, false, false, false, false))
     val uiStateChanges: LiveData<RepositoriesUiState> = uiState
 
     private val currentUiState: RepositoriesUiState
@@ -20,6 +20,8 @@ class RepositoriesPageViewModel(app: App): ViewModel() {
     private val asyncRepositories = CompositeDisposable()
 
     private val repoRepository = app.repoRepository
+
+    private var oldRepositories = emptyList<Repository>()
 
     fun loadRepositories(count: Int) {
         onStartLoading()
@@ -48,7 +50,15 @@ class RepositoriesPageViewModel(app: App): ViewModel() {
             .addTo(asyncRepositories)
     }
 
+    fun fetchRefreshingRepositories(count: Int) {
+        repoRepository.loadRepositories(count)
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe(this::onRefreshSuccess, this::onRefreshingError)
+            .addTo(asyncRepositories)
+    }
+
     private fun  onLoadSuccess(repositories: List<Repository>) {
+        oldRepositories = repositories
         updateState {
             copy(
                 repositories = repositories,
@@ -61,6 +71,7 @@ class RepositoriesPageViewModel(app: App): ViewModel() {
     }
 
     private fun  onUploadSuccess(repositories: List<Repository>) {
+        oldRepositories = repositories
         updateState {
             copy(
                 repositories = repositories,
@@ -72,13 +83,33 @@ class RepositoriesPageViewModel(app: App): ViewModel() {
         }
     }
 
+    private fun  onRefreshSuccess(repositories: List<Repository>) {
+        // not useful only for demonstrating refreshing
+        oldRepositories = if (oldRepositories == repositories) {
+            repositories.subList(2, repositories.size - 1)
+        } else {
+            repositories
+        }
+        updateState {
+            copy(
+                repositories = oldRepositories,
+                error = null,
+                isFirstLoading = false,
+                isUploading = false,
+                isUploadError = false,
+                isRefreshed = true
+            )
+        }
+    }
+
     private fun onLoadError(throwable: Throwable) {
         updateState {
             copy(
                 error = throwable,
                 isFirstLoading = false,
                 isUploading = false,
-                isUploadError = false
+                isUploadError = false,
+                isRefreshed = false
             )
         }
     }
@@ -90,6 +121,18 @@ class RepositoriesPageViewModel(app: App): ViewModel() {
                 isFirstLoading = false,
                 isUploading = false,
                 isUploadError = true
+            )
+        }
+    }
+
+    private fun onRefreshingError(throwable: Throwable) {
+        updateState {
+            copy(
+                error = null,
+                isFirstLoading = false,
+                isUploading = false,
+                isUploadError = false,
+                isRefreshed = false
             )
         }
     }
@@ -124,6 +167,7 @@ data class RepositoriesUiState(
     val error: Throwable?,
     val isFirstLoading: Boolean,
     val isUploading: Boolean?,
-    val isUploadError: Boolean
+    val isUploadError: Boolean,
+    val isRefreshed: Boolean
 
 )
