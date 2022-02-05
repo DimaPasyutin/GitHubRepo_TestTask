@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
     tools:context=".presentation.screens.main_page.RepositoriesPageFragment">
 
@@ -11,16 +12,22 @@
         android:layout_marginTop="35dp"
         android:visibility="gone"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"/>
+        android:layout_height="wrap_content"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"/>
 
     <Space
         android:id="@+id/space_view_problem"
         android:layout_width="match_parent"
         android:layout_height="150dp"
-        android:visibility="gone"/>
+        android:visibility="gone"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"/>
 
     <TextView
-        android:id="@+id/first_line"
+        android:id="@+id/first_line_text_problem"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
@@ -31,10 +38,13 @@
         android:textColor="@color/black_text"
         android:textSize="17sp"
         android:textStyle="normal"
-        android:visibility="gone" />
+        android:visibility="gone"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/space_view_problem" />
 
     <TextView
-        android:id="@+id/second_line"
+        android:id="@+id/second_line_text_problem"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
@@ -46,7 +56,10 @@
         android:textColor="@color/grey_text"
         android:textSize="16sp"
         android:textStyle="normal"
-        android:visibility="gone"/>
+        android:visibility="gone"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/first_line_text_problem"/>
 
     <TextView
         android:id="@+id/text_view_try_again"
@@ -61,12 +74,29 @@
         android:textColor="@color/purple_text_try_again"
         android:textSize="16sp"
         android:textStyle="normal"
-        android:visibility="gone"/>
+        android:visibility="gone"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/second_line_text_problem"/>
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/repositories_recycler_view"
         android:layout_marginTop="14dp"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"/>
+        android:layout_height="0dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/first_load_progress_bar"
+        app:layout_constraintBottom_toTopOf="@id/upload_progress_bar"/>
 
-</LinearLayout>
+    <ProgressBar
+        android:id="@+id/upload_progress_bar"
+        android:visibility="gone"
+        android:layout_marginBottom="8dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"/>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

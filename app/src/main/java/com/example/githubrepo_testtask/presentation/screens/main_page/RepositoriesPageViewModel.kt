@@ -1,6 +1,5 @@
 package com.example.githubrepo_testtask.presentation.screens.main_page
 
-import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -12,7 +11,7 @@ import io.reactivex.disposables.Disposable
 
 class RepositoriesPageViewModel(app: App): ViewModel() {
 
-    private val uiState = MutableLiveData(RepositoriesUiState(emptyList(), null, false, false))
+    private val uiState = MutableLiveData(RepositoriesUiState(emptyList(), null, false, false, false))
     val uiStateChanges: LiveData<RepositoriesUiState> = uiState
 
     private val currentUiState: RepositoriesUiState
@@ -34,25 +33,63 @@ class RepositoriesPageViewModel(app: App): ViewModel() {
             .addTo(asyncRepositories)
     }
 
+    fun fetchUploadRepositories(count: Int) {
+        updateState {
+            copy(
+                error = null,
+                isFirstLoading = false,
+                isUploading = true,
+                isUploadError = false
+            )
+        }
+        repoRepository.loadRepositories(count)
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe(this::onUploadSuccess, this::onUploadError)
+            .addTo(asyncRepositories)
+    }
+
     private fun  onLoadSuccess(repositories: List<Repository>) {
         updateState {
             copy(
                 repositories = repositories,
                 error = null,
                 isFirstLoading = false,
-                isUploading = false
+                isUploading = false,
+                isUploadError = false
+            )
+        }
+    }
+
+    private fun  onUploadSuccess(repositories: List<Repository>) {
+        updateState {
+            copy(
+                repositories = repositories,
+                error = null,
+                isFirstLoading = false,
+                isUploading = null,
+                isUploadError = false
             )
         }
     }
 
     private fun onLoadError(throwable: Throwable) {
-        val repositories = emptyList<Repository>()
         updateState {
             copy(
-                repositories = repositories,
                 error = throwable,
                 isFirstLoading = false,
-                isUploading = false
+                isUploading = false,
+                isUploadError = false
+            )
+        }
+    }
+
+    private fun onUploadError(throwable: Throwable) {
+        updateState {
+            copy(
+                error = throwable,
+                isFirstLoading = false,
+                isUploading = false,
+                isUploadError = true
             )
         }
     }
@@ -86,6 +123,7 @@ data class RepositoriesUiState(
     val repositories: List<Repository>,
     val error: Throwable?,
     val isFirstLoading: Boolean,
-    val isUploading: Boolean,
+    val isUploading: Boolean?,
+    val isUploadError: Boolean
 
 )

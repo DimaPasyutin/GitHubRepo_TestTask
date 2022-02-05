@@ -1,5 +1,6 @@
 package com.example.githubrepo_testtask.data.repository
 
+import android.util.Log
 import com.example.githubrepo_testtask.data.network.models.CommitGeneralInfoResponse
 import com.example.githubrepo_testtask.data.network.models.RepositoryResponse
 import com.example.githubrepo_testtask.data.network.retrofit.RepoApi
@@ -12,7 +13,7 @@ import io.reactivex.schedulers.Schedulers
 class RepoRepositoryImpl(private val repoApi: RepoApi): RepoRepository {
 
     @Volatile
-    var repoInMemoryCache: List<Repository> = ArrayList()
+    var repoInMemoryCache: List<Repository> = mutableListOf()
 
     override fun loadRepositories(count: Int): Single<List<Repository>> {
         return repoApi.getRepositories(count)
@@ -48,6 +49,7 @@ class RepoRepositoryImpl(private val repoApi: RepoApi): RepoRepository {
             with(repo) {
                 listRepositories.add(Repository(
                     nodeId = repo.nodeId,
+                    id = id.toInt(),
                     fullName = fullName,
                     avatarUrl = ownerResponse.avatarUrl,
                     login = ownerResponse.login,
@@ -55,7 +57,9 @@ class RepoRepositoryImpl(private val repoApi: RepoApi): RepoRepository {
                 ))
             }
         }
-        return listRepositories
+        val repo = repoInMemoryCache + listRepositories
+        Log.i("!!!", repo[0].toString() + repo[repo.size-1].toString())
+        return repoInMemoryCache + listRepositories
     }
 
 }

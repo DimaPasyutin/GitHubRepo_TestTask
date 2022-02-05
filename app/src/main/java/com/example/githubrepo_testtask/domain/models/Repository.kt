@@ -4,6 +4,8 @@ data class Repository(
 
     val nodeId: String,
 
+    val id: Int,
+
     val fullName: String,
 
     val avatarUrl: String,

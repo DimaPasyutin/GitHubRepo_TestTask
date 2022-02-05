@@ -99,6 +99,10 @@ class DetailsPageFragment : Fragment() {
         val layoutManager = LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, false)
         adapter!!.submitList(detailsUiState.commit?.listParent)
         with(requireBinding) {
+            textViewPreMessage.visibility = View.VISIBLE
+            textViewPreDate.visibility = View.VISIBLE
+            textViewPreCommiterName.visibility = View.VISIBLE
+            textViewListSha.visibility = View.VISIBLE
             textViewMessage.text = detailsUiState.commit?.message
             textViewDate.text = calculatePeriod(detailsUiState.commit!!.date)
             textViewCommiterName.text = detailsUiState.commit.name
@@ -109,9 +113,13 @@ class DetailsPageFragment : Fragment() {
 
     private fun isErrorLoading(detailsUiState: DetailsUiState, visibility: Int) {
         with(requireBinding) {
+            textViewPreMessage.visibility = View.GONE
+            textViewPreDate.visibility = View.GONE
+            textViewPreCommiterName.visibility = View.GONE
+            textViewListSha.visibility = View.GONE
             progressBarIsLoading.visibility = View.GONE
-            firstLine.visibility = visibility
-            secondLine.visibility = visibility
+            firstLineTextProblem.visibility = visibility
+            secondLineTextProblem.visibility = visibility
             textViewTryAgain.visibility = visibility
             textViewTryAgain.setOnClickListener {
                 detailsUiState.repository?.let { it1 -> detailsPageViewModel.loadCommit(it1.nodeId) }

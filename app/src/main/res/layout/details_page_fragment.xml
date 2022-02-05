@@ -11,7 +11,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:fitsSystemWindows="true"
-        android:background="@color/white">
+        android:background="@color/primary">
 
         <com.google.android.material.appbar.CollapsingToolbarLayout
             android:layout_width="match_parent"
@@ -27,7 +27,7 @@
                 <View
                     android:layout_width="match_parent"
                     android:layout_height="0dp"
-                    android:background="@color/grey_element"
+                    android:background="@color/primary_dark"
                     app:layout_constraintTop_toTopOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
@@ -184,7 +184,7 @@
                     android:focusable="true" />
 
                 <TextView
-                    android:id="@+id/first_line"
+                    android:id="@+id/first_line_text_problem"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="16dp"
@@ -202,7 +202,7 @@
                     app:layout_constraintTop_toBottomOf="@id/space" />
 
                 <TextView
-                    android:id="@+id/second_line"
+                    android:id="@+id/second_line_text_problem"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="16dp"
@@ -217,7 +217,7 @@
                     android:visibility="gone"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/first_line" />
+                    app:layout_constraintTop_toBottomOf="@id/first_line_text_problem" />
 
                 <TextView
                     android:id="@+id/text_view_try_again"
@@ -235,7 +235,7 @@
                     android:visibility="gone"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/second_line" />
+                    app:layout_constraintTop_toBottomOf="@id/second_line_text_problem" />
 
             </androidx.constraintlayout.widget.ConstraintLayout>
 

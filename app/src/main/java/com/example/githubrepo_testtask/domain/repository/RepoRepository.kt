@@ -2,6 +2,7 @@ package com.example.githubrepo_testtask.domain.repository
 
 import com.example.githubrepo_testtask.domain.models.Commit
 import com.example.githubrepo_testtask.domain.models.Repository
+import io.reactivex.Flowable
 import io.reactivex.Single
 
 interface RepoRepository {
