@@ -88,10 +88,6 @@ class RepositoriesPageFragment : Fragment() {
                 requireBinding.uploadProgressBar.visibility = VISIBLE
             }
 
-            repositoriesUiState.error == null && repositoriesUiState.repositories.isNotEmpty() && !repositoriesUiState.isUploadError -> {
-                isLoadSuccess(repositoriesUiState)
-            }
-
             repositoriesUiState.error != null && !repositoriesUiState.isUploadError && !repositoriesUiState.isRefreshed -> {
                 isErrorLoading()
             }
@@ -101,6 +97,10 @@ class RepositoriesPageFragment : Fragment() {
                 adapter!!.repositories = repositoriesUiState.repositories
                 requireBinding.uploadProgressBar.visibility = GONE
                 requireBinding.shimmer.visibility = GONE
+            }
+
+            repositoriesUiState.error == null && repositoriesUiState.repositories.isNotEmpty() && !repositoriesUiState.isUploadError -> {
+                isLoadSuccess(repositoriesUiState)
             }
 
             repositoriesUiState.isRefreshed -> {
@@ -113,6 +113,7 @@ class RepositoriesPageFragment : Fragment() {
         Log.i("!!!", repositoriesUiState.repositories[0].id.toString() + repositoriesUiState.repositories[repositoriesUiState.repositories.size - 1].id.toString())
         with(requireBinding) {
             uploadProgressBar.visibility = GONE
+            swipeContainer.visibility = VISIBLE
             repositoriesRecyclerView.visibility = VISIBLE
             adapter!!.repositories = repositoriesUiState.repositories
             spaceViewProblem.visibility = GONE
@@ -141,6 +142,7 @@ class RepositoriesPageFragment : Fragment() {
             }
             shimmer.visibility = GONE
             swipeContainer.isRefreshing = false
+            swipeContainer.visibility = GONE
         }
     }
 
