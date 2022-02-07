@@ -37,6 +37,7 @@ class RepoRepositoryImpl(private val repoApi: RepoApi): RepoRepository {
         )
     }
 
+    @Synchronized
     override fun saveRepositoriesInMemoryCache(newRepo: List<Repository>) {
         if (repoInMemoryCache == newRepo) return
         repoInMemoryCache = newRepo
